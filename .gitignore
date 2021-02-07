@@ -1,0 +1,12 @@
+**/.vs/
+**/bin/
+**/obj/
+**/Win32-Debug/
+**/Debug.win32/
+**/Win32-Release/
+**/Release.win32/
+**/Debug/
+*.swp
+*vc.opendb
+*VC.db
+*user
