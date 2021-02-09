@@ -15,16 +15,21 @@ public:
 
 protected:
 	void _AddTreasure();
+	void _SpawnEnemy();
 	void _AddDoorLeft();
 	void _AddDoorRight();
 	void _AddDoorUp();
 	void _AddDoorDown();
+	
 
 	cocos2d::Node* _parent{ nullptr };
 	cocos2d::Label* _touch_label{ nullptr };
 	cocos2d::Label* _time_label{ nullptr };
 	cocos2d::Sprite* _treasure{ nullptr };
+	cocos2d::Sprite* _enemy{ nullptr };
+	cocos2d::Sprite* _enemy2{ nullptr };
 	cocos2d::Sprite* _background{ nullptr };
+	cocos2d::Sprite* _tempSprite{ nullptr };
 	cocos2d::Sprite* _doorLeft{ nullptr };
 	cocos2d::Sprite* _doorRight{ nullptr };
 	cocos2d::Sprite* _doorUp{ nullptr };

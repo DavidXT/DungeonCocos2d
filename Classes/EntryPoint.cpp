@@ -7,6 +7,10 @@
 USING_NS_CC;
 using namespace CocosDenshion;
 
+std::vector<std::string> enemiesSprites;
+int enemyCount;
+std::string tempName;
+
 const std::string DEFAULT_FONT = "fonts/Arial.ttf";
 const int ScreenWidth = 1024;
 const int ScreenHeight = 768;
@@ -15,6 +19,11 @@ Player player;
 
 void EntryPoint::Init(Node *parent)
 {
+
+	enemiesSprites.push_back("mob_1.png");
+	enemiesSprites.push_back("mob_2.png");
+	enemiesSprites.push_back("mob_3.png");
+
 
 	_parent = parent;
 	_background = Sprite::create("background.png");
@@ -54,16 +63,33 @@ void EntryPoint::Init(Node *parent)
 	_AddDoorDown();
 
 	_AddTreasure();
+	_SpawnEnemy();
 }
 
 void EntryPoint::_AddTreasure()
 {
-
 	_treasure = Sprite::create("chest_closed.png");
 	_treasure->setPosition(rand()%(ScreenWidth/2) + 100, rand()%(ScreenHeight/2) + 200);
-	_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
+	_treasure->setScale(2,2);
+	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_treasure);
+}
 
+void EntryPoint::_SpawnEnemy()
+{
+	tempName = enemiesSprites[(rand() % 3)];
+	_enemy = Sprite::create(tempName);
+	_enemy->setPosition(rand() % (ScreenWidth / 2) + 100, rand() % (ScreenHeight / 2) + 200);
+	_enemy->setScale(1.5, 1.5);
+	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
+	_parent->addChild(_enemy);
+
+	tempName = enemiesSprites[(rand() % 2)];
+	_enemy2 = Sprite::create(tempName);
+	_enemy2->setPosition(rand() % (ScreenWidth / 2) + 100, rand() % (ScreenHeight / 2) + 200);
+	_enemy2->setScale(1.5, 1.5);
+	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
+	_parent->addChild(_enemy2);
 }
 
 void EntryPoint::_AddDoorLeft() {
@@ -95,6 +121,7 @@ void EntryPoint::Update(float delta_time)
 {
 	_total_time += delta_time;
 	_time_label->setString(std::to_string(dungeon.X)+ " " +std::to_string(dungeon.Y));
+
 }
 
 void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
@@ -104,7 +131,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 		// display coords touched
 		std::stringstream ss;
 		ss << position.x << " " << position.y << std::endl;
-		_touch_label->setString("Player gold : "+std::to_string(player.gold));
+		_touch_label->setString("Player gold : " + std::to_string(player.gold));
 
 		if (_treasure)
 		{
@@ -186,6 +213,30 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				dungeon.Y--;
+			}
+		}
+
+		if (_enemy) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _enemy->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _enemy->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
+			}
+		}
+
+		if (_enemy2) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _enemy2->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _enemy2->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
 			}
 		}
 
