@@ -14,6 +14,9 @@ public:
 	void Touch(cocos2d::Vec2 position, bool down);
 
 protected:
+	void ClearRoom();
+	void EnterRoom();
+
 	void _AddTreasure();
 	void _SpawnEnemy();
 	void _AddDoorLeft();

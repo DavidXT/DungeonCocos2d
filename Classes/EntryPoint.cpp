@@ -2,6 +2,8 @@
 #include "SimpleAudioEngine.h"
 #include "Player.h"
 #include "Dungeon.h"
+#include <time.h>
+#include <time.h>
 
 
 USING_NS_CC;
@@ -11,18 +13,22 @@ std::vector<std::string> enemiesSprites;
 int enemyCount;
 std::string tempName;
 
+
 const std::string DEFAULT_FONT = "fonts/Arial.ttf";
 const int ScreenWidth = 1024;
 const int ScreenHeight = 768;
 Dungeon dungeon;
 Player player;
 
+
 void EntryPoint::Init(Node *parent)
 {
-
+	srand(time(NULL));
 	enemiesSprites.push_back("mob_1.png");
 	enemiesSprites.push_back("mob_2.png");
 	enemiesSprites.push_back("mob_3.png");
+	enemiesSprites.push_back("mob_4.png");
+	enemiesSprites.push_back("mob_5.png");
 
 
 	_parent = parent;
@@ -75,16 +81,40 @@ void EntryPoint::_AddTreasure()
 	_parent->addChild(_treasure);
 }
 
+void EntryPoint::ClearRoom()
+{
+	_enemy->removeFromParent();
+	_enemy = nullptr;
+	_enemy2->removeFromParent();
+	_enemy2 = nullptr;
+	if (_treasure != nullptr)
+	{
+		_treasure->removeFromParent();
+		_treasure = nullptr;
+	}
+}
+
+void EntryPoint::EnterRoom()
+{
+	_AddDoorLeft();
+	_AddDoorRight();
+	_AddDoorUp();
+	_AddDoorDown();
+
+	_AddTreasure();
+	_SpawnEnemy();
+}
+
 void EntryPoint::_SpawnEnemy()
 {
-	tempName = enemiesSprites[(rand() % 3)];
+	tempName = enemiesSprites[(rand() % 5)];
 	_enemy = Sprite::create(tempName);
 	_enemy->setPosition(rand() % (ScreenWidth / 2) + 100, rand() % (ScreenHeight / 2) + 200);
 	_enemy->setScale(1.5, 1.5);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_enemy);
 
-	tempName = enemiesSprites[(rand() % 2)];
+	tempName = enemiesSprites[(rand() % 5)];
 	_enemy2 = Sprite::create(tempName);
 	_enemy2->setPosition(rand() % (ScreenWidth / 2) + 100, rand() % (ScreenHeight / 2) + 200);
 	_enemy2->setScale(1.5, 1.5);
@@ -167,7 +197,6 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 				player.gold++;
 				_treasure->removeFromParent();
 				_treasure = nullptr;
-				_AddTreasure();
 			}
 		}
 		if (_doorLeft) {
@@ -179,6 +208,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				dungeon.X--;
+				ClearRoom();
+				EnterRoom();
 			}
 		}
 		if (_doorRight) {
@@ -190,6 +221,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				dungeon.X++;
+				ClearRoom();
+				EnterRoom();
 			}
 
 		}
@@ -202,6 +235,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				dungeon.Y++;
+				ClearRoom();
+				EnterRoom();
 			}
 		}
 		if (_doorDown) {
@@ -213,6 +248,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				dungeon.Y--;
+				ClearRoom();
+				EnterRoom();
 			}
 		}
 
