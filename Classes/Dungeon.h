@@ -1,8 +1,12 @@
 #pragma once
+
+class Room;
+
 class Dungeon
 {
+	std::vector<std::vector<Room*>> AllRoom;
 public:
-	int X=0;
-	int Y = 0;
+	Dungeon(int, int);
 };
+
 

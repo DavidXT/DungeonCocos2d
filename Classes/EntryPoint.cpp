@@ -17,7 +17,7 @@ std::string tempName;
 const std::string DEFAULT_FONT = "fonts/Arial.ttf";
 const int ScreenWidth = 1024;
 const int ScreenHeight = 768;
-Dungeon dungeon;
+Dungeon* dungeon;
 Player player;
 
 
@@ -62,6 +62,8 @@ void EntryPoint::Init(Node *parent)
 	menu->setPosition(Vec2::ZERO);
 	parent->addChild(menu, 1);
 
+	//Génération du donjon
+	dungeon = new Dungeon(10,7);
 	//Génération des portes au début du donjon
 	_AddDoorLeft();
 	_AddDoorRight();
@@ -150,7 +152,7 @@ void EntryPoint::_AddDoorDown() {
 void EntryPoint::Update(float delta_time)
 {
 	_total_time += delta_time;
-	_time_label->setString(std::to_string(dungeon.X)+ " " +std::to_string(dungeon.Y));
+	_time_label->setString(std::to_string(player.X)+ " " +std::to_string(player.Y));
 
 }
 
@@ -207,7 +209,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				dungeon.X--;
+				player.X--;
 				ClearRoom();
 				EnterRoom();
 			}
@@ -220,7 +222,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				dungeon.X++;
+				player.X++;
 				ClearRoom();
 				EnterRoom();
 			}
@@ -234,7 +236,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				dungeon.Y++;
+				player.Y++;
 				ClearRoom();
 				EnterRoom();
 			}
@@ -247,7 +249,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				dungeon.Y--;
+				player.Y--;
 				ClearRoom();
 				EnterRoom();
 			}
