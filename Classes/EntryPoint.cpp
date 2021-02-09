@@ -75,7 +75,7 @@ void EntryPoint::Init(Node *parent)
 void EntryPoint::_AddTreasure()
 {
 	_treasure = Sprite::create("chest_closed.png");
-	_treasure->setPosition(rand()%(ScreenWidth/2) + 100, rand()%(ScreenHeight/2) + 200);
+	_treasure->setPosition(rand()%(ScreenWidth/2+200) + 100, rand()%(ScreenHeight/2) + 200);
 	_treasure->setScale(2,2);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_treasure);
@@ -109,14 +109,14 @@ void EntryPoint::_SpawnEnemy()
 {
 	tempName = enemiesSprites[(rand() % 5)];
 	_enemy = Sprite::create(tempName);
-	_enemy->setPosition(rand() % (ScreenWidth / 2) + 100, rand() % (ScreenHeight / 2) + 200);
+	_enemy->setPosition(rand() % (ScreenWidth / 2+200) + 100, rand() % (ScreenHeight / 2) + 200);
 	_enemy->setScale(1.5, 1.5);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_enemy);
 
 	tempName = enemiesSprites[(rand() % 5)];
 	_enemy2 = Sprite::create(tempName);
-	_enemy2->setPosition(rand() % (ScreenWidth / 2) + 100, rand() % (ScreenHeight / 2) + 200);
+	_enemy2->setPosition(rand() % (ScreenWidth / 2+200) + 100, rand() % (ScreenHeight / 2) + 200);
 	_enemy2->setScale(1.5, 1.5);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_enemy2);
