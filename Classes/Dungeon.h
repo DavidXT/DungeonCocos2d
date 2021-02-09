@@ -1,6 +1,8 @@
 #pragma once
-#include "cocos2d.h"
 class Dungeon
 {
+public:
+	int X=0;
+	int Y = 0;
 };
 

@@ -11,10 +11,17 @@ const std::string DEFAULT_FONT = "fonts/Arial.ttf";
 const int ScreenWidth = 1024;
 const int ScreenHeight = 768;
 Dungeon dungeon;
+Player player;
 
 void EntryPoint::Init(Node *parent)
 {
+
 	_parent = parent;
+	_background = Sprite::create("background.png");
+	_background->setPosition(ScreenWidth / 2, ScreenHeight / 2);
+	_background->setScale(1, 1);
+	_parent->addChild(_background);
+
 	// labels
 	_touch_label = Label::createWithTTF("Hello World", DEFAULT_FONT, 24);
 	_touch_label->setPosition(100, 100);
@@ -39,6 +46,8 @@ void EntryPoint::Init(Node *parent)
 	auto menu = Menu::create(closeItem, NULL);
 	menu->setPosition(Vec2::ZERO);
 	parent->addChild(menu, 1);
+
+	//Génération des portes au début du donjon
 	_AddDoorLeft();
 	_AddDoorRight();
 	_AddDoorUp();
@@ -95,7 +104,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 		// display coords touched
 		std::stringstream ss;
 		ss << position.x << " " << position.y << std::endl;
-		_touch_label->setString(ss.str());
+		_touch_label->setString("Player gold : "+std::to_string(player.gold));
 
 		if (_treasure)
 		{
@@ -128,6 +137,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						RemoveSelf::create(),
 						nullptr
 					));
+				player.gold++;
 				_treasure->removeFromParent();
 				_treasure = nullptr;
 				_AddTreasure();

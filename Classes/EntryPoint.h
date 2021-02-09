@@ -24,6 +24,7 @@ protected:
 	cocos2d::Label* _touch_label{ nullptr };
 	cocos2d::Label* _time_label{ nullptr };
 	cocos2d::Sprite* _treasure{ nullptr };
+	cocos2d::Sprite* _background{ nullptr };
 	cocos2d::Sprite* _doorLeft{ nullptr };
 	cocos2d::Sprite* _doorRight{ nullptr };
 	cocos2d::Sprite* _doorUp{ nullptr };

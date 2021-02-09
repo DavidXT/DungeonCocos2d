@@ -1,7 +1,8 @@
 #pragma once
-#include "cocos2d.h"
 class Player
 {
+public:
+	int gold = 0;
 };
 
 
