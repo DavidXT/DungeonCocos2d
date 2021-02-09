@@ -1,13 +1,16 @@
 #include "EntryPoint.h"
 #include "SimpleAudioEngine.h"
+#include "Player.h"
+#include "Dungeon.h"
+
 
 USING_NS_CC;
 using namespace CocosDenshion;
 
-
 const std::string DEFAULT_FONT = "fonts/Arial.ttf";
 const int ScreenWidth = 1024;
 const int ScreenHeight = 768;
+Dungeon dungeon;
 
 void EntryPoint::Init(Node *parent)
 {
@@ -36,22 +39,53 @@ void EntryPoint::Init(Node *parent)
 	auto menu = Menu::create(closeItem, NULL);
 	menu->setPosition(Vec2::ZERO);
 	parent->addChild(menu, 1);
+	_AddDoorLeft();
+	_AddDoorRight();
+	_AddDoorUp();
+	_AddDoorDown();
 
 	_AddTreasure();
 }
 
 void EntryPoint::_AddTreasure()
 {
+
 	_treasure = Sprite::create("chest_closed.png");
 	_treasure->setPosition(rand()%(ScreenWidth/2) + 100, rand()%(ScreenHeight/2) + 200);
 	_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_treasure);
+
+}
+
+void EntryPoint::_AddDoorLeft() {
+	_doorLeft = Sprite::create("door.png");
+	_doorLeft->setPosition(20, ScreenHeight / 2);
+	_doorLeft->setScale(0.1, 0.1);
+	_parent->addChild(_doorLeft);
+}
+void EntryPoint::_AddDoorRight() {
+	_doorRight = Sprite::create("door.png");
+	_doorRight->setPosition(ScreenWidth, ScreenHeight / 2);
+	_doorRight->setScale(0.1, 0.1);
+	_parent->addChild(_doorRight);
+}
+void EntryPoint::_AddDoorUp() {
+	_doorUp = Sprite::create("door.png");
+	_doorUp->setPosition(ScreenWidth / 2, ScreenHeight);
+	_doorUp->setScale(0.1, 0.1);
+	_parent->addChild(_doorUp);
+}
+void EntryPoint::_AddDoorDown() {
+	_doorDown = Sprite::create("door.png");
+	_doorDown->setPosition(ScreenWidth / 2, 20);
+	_doorDown->setScale(0.1, 0.1);
+	_parent->addChild(_doorDown);
 }
 
 void EntryPoint::Update(float delta_time)
 {
 	_total_time += delta_time;
-	_time_label->setString(std::to_string(_total_time));
+	_time_label->setString(std::to_string(dungeon.X)+ " " +std::to_string(dungeon.Y));
 }
 
 void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
@@ -99,6 +133,53 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 				_AddTreasure();
 			}
 		}
+		if (_doorLeft) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _doorLeft->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _doorLeft->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				dungeon.X--;
+			}
+		}
+		if (_doorRight) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _doorRight->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _doorRight->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				dungeon.X++;
+			}
+
+		}
+		if (_doorUp) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _doorUp->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _doorUp->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				dungeon.Y++;
+			}
+		}
+		if (_doorDown) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _doorDown->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _doorDown->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				dungeon.Y--;
+			}
+		}
+
+
 	}
 }
 

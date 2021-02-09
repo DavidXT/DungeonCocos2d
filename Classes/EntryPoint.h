@@ -15,12 +15,19 @@ public:
 
 protected:
 	void _AddTreasure();
+	void _AddDoorLeft();
+	void _AddDoorRight();
+	void _AddDoorUp();
+	void _AddDoorDown();
 
 	cocos2d::Node* _parent{ nullptr };
 	cocos2d::Label* _touch_label{ nullptr };
 	cocos2d::Label* _time_label{ nullptr };
 	cocos2d::Sprite* _treasure{ nullptr };
-
+	cocos2d::Sprite* _doorLeft{ nullptr };
+	cocos2d::Sprite* _doorRight{ nullptr };
+	cocos2d::Sprite* _doorUp{ nullptr };
+	cocos2d::Sprite* _doorDown{ nullptr };
 	float _total_time{ 0 };
 };
 
