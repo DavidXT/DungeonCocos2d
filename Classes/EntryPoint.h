@@ -25,6 +25,8 @@ protected:
 	void _AddDoorDown();
 	void _SpawnDoor();
 
+	void _DrawMap();
+
 	void SpawnPlayer();
 	void MovePlayer();
 	
@@ -42,6 +44,8 @@ protected:
 	cocos2d::Sprite* _doorRight{ nullptr };
 	cocos2d::Sprite* _doorUp{ nullptr };
 	cocos2d::Sprite* _doorDown{ nullptr };
+	cocos2d::Sprite* _map{ nullptr };
+	cocos2d::Sprite* _map1{ nullptr };
 	float _total_time{ 0 };
 };
 

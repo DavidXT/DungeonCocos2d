@@ -4,7 +4,6 @@
 #include "Dungeon.h"
 #include <time.h>
 
-
 USING_NS_CC;
 using namespace CocosDenshion;
 
@@ -55,6 +54,7 @@ void EntryPoint::Init(Node *parent)
 	_AddTreasure();
 	_SpawnEnemy();
 	SpawnPlayer();
+	_DrawMap();
 }
 
 void EntryPoint::_AddTreasure()
@@ -109,6 +109,7 @@ void EntryPoint::EnterRoom()
 	_SpawnDoor();
 	_AddTreasure();
 	_SpawnEnemy();
+	_DrawMap();
 }
 
 void EntryPoint::_SpawnDoor() {
@@ -128,6 +129,15 @@ void EntryPoint::_SpawnDoor() {
 	if (dungeon->AllRoom[player.X][player.Y+1] != nullptr) {
 		_AddDoorUp();
 	}
+
+}
+
+void EntryPoint::_DrawMap()
+{
+	_map = Sprite::create("paper_scroll.png");
+	_map->setPosition(ScreenWidth / 2, ScreenHeight / 2);
+	_map->setScale(2, 2);
+	_parent->addChild(_map);
 
 }
 
