@@ -16,29 +16,46 @@ Dungeon::Dungeon(int nbRoom,int sizeX, int sizeY) {
 	AllRoom[0][0] = new Room(0, 0);
 	int currentX = 0;
 	int currentY = 0;
-	for (int j = 0; j <= nbRoom; j++) {
-		int tmp =  rand() % 2;
-		if (tmp == 0) {
-			currentX++;
-			if (AllRoom[currentX][currentY] == nullptr) {
-				AllRoom[currentX][currentY] = new Room(currentX, currentY);
+	int j = 0;
+	do {
+		currentX = rand() % sizeX;
+		currentY = rand() % sizeY;
+		if (currentX == 0) {
+			if (currentY == 0) {
+				if (AllRoom[currentX + 1][currentY] != nullptr || AllRoom[currentX][currentY + 1] != nullptr) {
+					if (AllRoom[currentX][currentY] == nullptr) {
+						AllRoom[currentX][currentY] = new Room(currentX, currentY);
+						j++;
+					}
+				}
 			}
-			else if (AllRoom[currentX][currentY] != nullptr) {
-				currentY++;
-				AllRoom[currentX][currentY] = new Room(currentX, currentY);
+			else {
+				if (AllRoom[currentX + 1][currentY] != nullptr || AllRoom[currentX][currentY + 1] != nullptr || AllRoom[currentX][currentY - 1]) {
+					if (AllRoom[currentX][currentY] == nullptr) {
+						AllRoom[currentX][currentY] = new Room(currentX, currentY);
+						j++;
+					}
+				}
+			}
+
+		}
+		else if (currentY == 0) {
+			if (AllRoom[currentX + 1][currentY] != nullptr || AllRoom[currentX - 1][currentY] != nullptr || AllRoom[currentX][currentY + 1] != nullptr) {
+				if (AllRoom[currentX][currentY] == nullptr) {
+					AllRoom[currentX][currentY] = new Room(currentX, currentY);
+					j++;
+				}
 			}
 		}
 		else {
-			currentY++;
-			if (AllRoom[currentX][currentY] == nullptr) {
-				AllRoom[currentX][currentY] = new Room(currentX, currentY);
-			}
-			else if(AllRoom[currentX][currentY] != nullptr){
-				currentX++;
-				AllRoom[currentX][currentY] = new Room(currentX, currentY);
+			if (AllRoom[currentX + 1][currentY] != nullptr || AllRoom[currentX - 1][currentY] != nullptr || AllRoom[currentX][currentY + 1] != nullptr || AllRoom[currentX][currentY - 1]) {
+				if (AllRoom[currentX][currentY] == nullptr) {
+					AllRoom[currentX][currentY] = new Room(currentX, currentY);
+					j++;
+				}
 			}
 		}
-	}
+	} while (j <= nbRoom);
 }
 
 Room* Dungeon::getRoom(int x, int y) {
