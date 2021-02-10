@@ -12,6 +12,7 @@ Dungeon::Dungeon(int nbRoom,int sizeX, int sizeY) {
 		}
 		AllRoom.push_back(Line);
 	}
+	AllRoom[0][0] = new Room(0, 0);
 	int currentX = 0;
 	int currentY = 0;
 	for (int j = 0; j <= nbRoom; j++) {
@@ -21,12 +22,25 @@ Dungeon::Dungeon(int nbRoom,int sizeX, int sizeY) {
 			if (AllRoom[currentX][currentY] == nullptr) {
 				AllRoom[currentX][currentY] = new Room(currentX, currentY);
 			}
+			else if (AllRoom[currentX][currentY] != nullptr) {
+				currentY++;
+				AllRoom[currentX][currentY] = new Room(currentX, currentY);
+			}
 		}
 		else {
 			currentY++;
 			if (AllRoom[currentX][currentY] == nullptr) {
 				AllRoom[currentX][currentY] = new Room(currentX, currentY);
 			}
+			else if(AllRoom[currentX][currentY] != nullptr){
+				currentX++;
+				AllRoom[currentX][currentY] = new Room(currentX, currentY);
+			}
 		}
 	}
 }
+
+Room* Dungeon::getRoom(int x, int y) {
+	return AllRoom[x][y];
+}
+

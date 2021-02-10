@@ -64,16 +64,17 @@ void EntryPoint::Init(Node *parent)
 	//Génération du donjon
 	dungeon = new Dungeon(10,10,7);
 	//Génération des portes au début du donjon
-	SpawnDoor();
-
+	_SpawnDoor();
+	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
 	_AddTreasure();
 	_SpawnEnemy();
 }
 
 void EntryPoint::_AddTreasure()
 {
+	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
 	_treasure = Sprite::create("chest_closed.png");
-	_treasure->setPosition(rand()%(ScreenWidth/2+200) + 100, rand()%(ScreenHeight/2) + 200);
+	_treasure->setPosition(actualRoom->getTreasurePosX(), actualRoom->getTreasurePosY());
 	_treasure->setScale(2,2);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_treasure);
@@ -81,10 +82,14 @@ void EntryPoint::_AddTreasure()
 
 void EntryPoint::ClearRoom()
 {
-	_enemy->removeFromParent();
-	_enemy = nullptr;
-	_enemy2->removeFromParent();
-	_enemy2 = nullptr;
+	if (_enemy != nullptr) {
+		_enemy->removeFromParent();
+		_enemy = nullptr;
+	}
+	if (_enemy2 != nullptr) {
+		_enemy2->removeFromParent();
+		_enemy2 = nullptr;
+	}
 	if (_treasure != nullptr)
 	{
 		_treasure->removeFromParent();
@@ -110,12 +115,13 @@ void EntryPoint::ClearRoom()
 
 void EntryPoint::EnterRoom()
 {
-	SpawnDoor();
+	Room* actualRoom = dungeon->getRoom(player.X,player.Y);
+	_SpawnDoor();
 	_AddTreasure();
 	_SpawnEnemy();
 }
 
-void EntryPoint::SpawnDoor() {
+void EntryPoint::_SpawnDoor() {
 	if (dungeon->AllRoom[player.X+1][player.Y] != nullptr) {
 		_AddDoorRight();
 	}
@@ -137,16 +143,19 @@ void EntryPoint::SpawnDoor() {
 
 void EntryPoint::_SpawnEnemy()
 {
-	tempName = enemiesSprites[(rand() % 5)];
+	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
+	Enemy* E = actualRoom->getEnemy1();
+	tempName = enemiesSprites[E->GetSprite()];
 	_enemy = Sprite::create(tempName);
-	_enemy->setPosition(rand() % (ScreenWidth / 2+200) + 100, rand() % (ScreenHeight / 2) + 200);
+	_enemy->setPosition(E->GetPosX(),E->GetPosY());
 	_enemy->setScale(1.5, 1.5);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_enemy);
 
-	tempName = enemiesSprites[(rand() % 5)];
+	Enemy* E2 = actualRoom->getEnemy2();
+	tempName = enemiesSprites[E2->GetSprite()];
 	_enemy2 = Sprite::create(tempName);
-	_enemy2->setPosition(rand() % (ScreenWidth / 2+200) + 100, rand() % (ScreenHeight / 2) + 200);
+	_enemy2->setPosition(E2->GetPosX(), E2->GetPosY());
 	_enemy2->setScale(1.5, 1.5);
 	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
 	_parent->addChild(_enemy2);

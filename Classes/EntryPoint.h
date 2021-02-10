@@ -23,7 +23,7 @@ protected:
 	void _AddDoorRight();
 	void _AddDoorUp();
 	void _AddDoorDown();
-	void SpawnDoor();
+	void _SpawnDoor();
 	
 
 	cocos2d::Node* _parent{ nullptr };

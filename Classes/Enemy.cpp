@@ -1,17 +1,23 @@
 #include "Enemy.h"
+#include "EntryPoint.h"
+#include "SimpleAudioEngine.h"
+USING_NS_CC;
+using namespace CocosDenshion;
+const int ScreenWidth = 1024;
+const int ScreenHeight = 768;
 
-Enemy::Enemy(std::string newSprite, int x, int y)
+Enemy::Enemy()
 {
-	roomPosX = x;
-	roomPosY = y;
-	sprite = newSprite;
+	roomPosX = rand() % (ScreenWidth / 2 + 200) + 100;
+	roomPosY = rand() % (ScreenHeight / 2) + 200;
+	sprite = (rand() % 5);
 }
 
 /// <summary>
 /// Get enemy sprite name
 /// </summary>
 /// <returns> Enemy sprite name </returns>
-std::string Enemy::GetSprite()
+int Enemy::GetSprite()
 {
 	return sprite;
 }
@@ -20,7 +26,7 @@ std::string Enemy::GetSprite()
 /// Set enemy sprite name
 /// </summary>
 /// <param name="newSprite"> New sprite name</param>
-void Enemy::SetSprite(std::string newSprite)
+void Enemy::SetSprite(int newSprite)
 {
 	sprite = newSprite;
 }
