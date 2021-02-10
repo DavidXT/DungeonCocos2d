@@ -37,29 +37,15 @@ void EntryPoint::Init(Node *parent)
 	_parent->addChild(_background);
 
 	// labels
-	_touch_label = Label::createWithTTF("Hello World", DEFAULT_FONT, 24);
-	_touch_label->setPosition(100, 100);
+	_gold_label = Label::createWithTTF("0", DEFAULT_FONT, 24);
+	_gold_label->setPosition(100, 100);
 
 	_time_label = Label::createWithTTF("", DEFAULT_FONT, 24);
 	_time_label->setPosition(0, 0);
 	_time_label->setAnchorPoint(Vec2(0, 0));
 
-	_parent->addChild(_touch_label);
+	_parent->addChild(_gold_label);
 	_parent->addChild(_time_label);
-
-	// button
-	auto button_callback = [=](Ref*) {
-		_touch_label->setString("Button pressed");
-	};
-	auto closeItem = MenuItemImage::create("CloseNormal.png", "CloseSelected.png", button_callback);
-	float x = ScreenWidth - closeItem->getContentSize().width/2;
-	float y = closeItem->getContentSize().height/2;
-	closeItem->setPosition(Vec2(x,y));
-
-	// create menu, it's an autorelease object
-	auto menu = Menu::create(closeItem, NULL);
-	menu->setPosition(Vec2::ZERO);
-	parent->addChild(menu, 1);
 
 	//Génération du donjon
 	dungeon = new Dungeon(10,10,7);
@@ -163,26 +149,29 @@ void EntryPoint::_SpawnEnemy()
 
 void EntryPoint::_AddDoorLeft() {
 	_doorLeft = Sprite::create("door.png");
-	_doorLeft->setPosition(20, ScreenHeight / 2);
-	_doorLeft->setScale(0.1, 0.1);
+	_doorLeft->setPosition(25, ScreenHeight / 2);
+	_doorLeft->setScale(0.15, 0.15);
+	_doorLeft->setRotation(180);
 	_parent->addChild(_doorLeft);
 }
 void EntryPoint::_AddDoorRight() {
 	_doorRight = Sprite::create("door.png");
-	_doorRight->setPosition(ScreenWidth, ScreenHeight / 2);
-	_doorRight->setScale(0.1, 0.1);
+	_doorRight->setPosition(ScreenWidth-25, ScreenHeight / 2);
+	_doorRight->setScale(0.15, 0.15);;
 	_parent->addChild(_doorRight);
 }
 void EntryPoint::_AddDoorUp() {
 	_doorUp = Sprite::create("door.png");
-	_doorUp->setPosition(ScreenWidth / 2, ScreenHeight);
-	_doorUp->setScale(0.1, 0.1);
+	_doorUp->setPosition(ScreenWidth / 2, ScreenHeight-30);
+	_doorUp->setRotation(-90);
+	_doorUp->setScale(0.15, 0.15);
 	_parent->addChild(_doorUp);
 }
 void EntryPoint::_AddDoorDown() {
 	_doorDown = Sprite::create("door.png");
-	_doorDown->setPosition(ScreenWidth / 2, 20);
-	_doorDown->setScale(0.1, 0.1);
+	_doorDown->setPosition(ScreenWidth / 2, 25);
+	_doorDown->setRotation(90);
+	_doorDown->setScale(0.15, 0.15);
 	_parent->addChild(_doorDown);
 }
 
@@ -200,7 +189,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 		// display coords touched
 		std::stringstream ss;
 		ss << position.x << " " << position.y << std::endl;
-		_touch_label->setString("Player gold : " + std::to_string(player.gold));
+		
 
 		if (_treasure)
 		{
@@ -234,6 +223,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						nullptr
 					));
 				player.gold++;
+				_gold_label->setString("Player gold : " + std::to_string(player.gold));
 				_treasure->removeFromParent();
 				_treasure = nullptr;
 			}

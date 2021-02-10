@@ -27,7 +27,7 @@ protected:
 	
 
 	cocos2d::Node* _parent{ nullptr };
-	cocos2d::Label* _touch_label{ nullptr };
+	cocos2d::Label* _gold_label{ nullptr };
 	cocos2d::Label* _time_label{ nullptr };
 	cocos2d::Sprite* _treasure{ nullptr };
 	cocos2d::Sprite* _enemy{ nullptr };
