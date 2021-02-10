@@ -26,6 +26,7 @@ protected:
 	void _SpawnDoor();
 
 	void _DrawMap();
+	void _mapOnOff() { _map->setVisible(!_map->isVisible()); }
 
 	void SpawnPlayer();
 	void MovePlayer();
@@ -44,6 +45,7 @@ protected:
 	cocos2d::Sprite* _doorRight{ nullptr };
 	cocos2d::Sprite* _doorUp{ nullptr };
 	cocos2d::Sprite* _doorDown{ nullptr };
+	cocos2d::Sprite* _mapButton{ nullptr };
 	cocos2d::Sprite* _map{ nullptr };
 	cocos2d::Sprite* _room{ nullptr };
 	std::vector<cocos2d::Sprite*> _rooms;

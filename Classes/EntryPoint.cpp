@@ -133,23 +133,32 @@ void EntryPoint::_SpawnDoor() {
 
 void EntryPoint::_DrawMap()
 {
+	//add map button
+	_mapButton = Sprite::create("paper_scroll.png");
+	_mapButton->setPosition(ScreenWidth / 25, ScreenHeight / 20 * 19);
+	_mapButton->setScale(0.12,0.16);
+	_parent->addChild(_mapButton);
+
+	//map sprite
 	_map = Sprite::create("paper_scroll.png");
 	_map->setPosition(ScreenWidth / 2, ScreenHeight / 2);
 	_map->setScale(2, 2);
 	_parent->addChild(_map);
 
+	//get size of room sprite
 	_room = Sprite::create("room.png");
 	Size size = _room->getContentSize();
 	float roomWidth = size.width;
 	float roomHeight = size.height;
 
+	//go through dungeon room
 	int x = 0;
 	int y = 0;
 	for (std::vector<Room*> line : dungeon->AllRoom) {
 		y = 0;
 		for (Room* r : line) {
 
-			if (r != nullptr) {
+			if (r != nullptr) {//room exist, add sprite
 				_rooms.push_back(Sprite::create("room.png"));
 				_rooms[x + y]->setPosition(100 + x * roomWidth / 2, 100 + y * roomHeight/2);
 				_rooms[x + y]->setScale(0.5, 0.5);
@@ -160,6 +169,7 @@ void EntryPoint::_DrawMap()
 		}
 		x++;
 	}
+	_map->setVisible(false);
 }
 
 void EntryPoint::SpawnPlayer()
@@ -255,7 +265,15 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 		std::stringstream ss;
 		ss << position.x << " " << position.y << std::endl;
 		
-
+		if (_mapButton) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _mapButton->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _mapButton->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height) _mapOnOff();
+			else if (_map->isVisible()) _mapOnOff();//auto close map when click
+		}
 		if (_treasure)
 		{
 			// convert coordinates to the treasure coordinations
