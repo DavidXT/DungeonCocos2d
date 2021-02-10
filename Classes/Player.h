@@ -1,10 +1,19 @@
 #pragma once
 class Player
 {
+	int X ;
+	int Y;
+	int gold ;
 public:
-	int X = 0;
-	int Y = 0;
-	int gold = 0;
+	Player(int, int);
+	void AddGold(int);
+	void moveDown();
+	void moveUp();
+	void moveLeft();
+	void moveRight();
+	int getPosX();
+	int getPosY();
+	int getGold();
 };
 
 

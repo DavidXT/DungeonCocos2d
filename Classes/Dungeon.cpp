@@ -5,7 +5,9 @@
 USING_NS_CC;
 using namespace CocosDenshion;
 
-Dungeon::Dungeon(int nbRoom,int sizeX, int sizeY) {
+Dungeon::Dungeon(int nbRoom,int X, int Y) {
+	sizeX = X;
+	sizeY = Y;
 	for (int i = 0; i <= sizeX; i++) {
 		std::vector<Room*> Line;
 		for (int j = 0; j <= sizeY; j++) {
@@ -13,9 +15,9 @@ Dungeon::Dungeon(int nbRoom,int sizeX, int sizeY) {
 		}
 		AllRoom.push_back(Line);
 	}
-	AllRoom[0][0] = new Room(0, 0);
-	int currentX = 0;
-	int currentY = 0;
+	AllRoom[sizeX/2][sizeY/2] = new Room(sizeX/2, sizeY/2);
+	int currentX;
+	int currentY;
 	int j = 0;
 	do {
 		currentX = rand() % sizeX;

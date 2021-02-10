@@ -16,7 +16,7 @@ const std::string DEFAULT_FONT = "fonts/Arial.ttf";
 const int ScreenWidth = 1024;
 const int ScreenHeight = 768;
 Dungeon* dungeon;
-Player player;
+Player* player;
 
 
 void EntryPoint::Init(Node *parent)
@@ -48,13 +48,14 @@ void EntryPoint::Init(Node *parent)
 
 	//Génération du donjon
 	dungeon = new Dungeon(10,10,7);
+	player = new Player(dungeon->getSizeX() / 2, dungeon->getSizeY() / 2);
 	//Génération des portes au début du donjon
 	_AddDoorDown();
 	_AddDoorUp();
 	_AddDoorLeft();
 	_AddDoorRight();
 	_updateDoor();
-	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
+	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 	_AddTreasure();
 	_SpawnEnemy();
 	SpawnPlayer();
@@ -63,7 +64,7 @@ void EntryPoint::Init(Node *parent)
 
 void EntryPoint::_AddTreasure()
 {
-	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
+	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 	_treasure = Sprite::create("chest_closed.png");
 	_treasure->setPosition(actualRoom->getTreasurePosX(), actualRoom->getTreasurePosY());
 	_treasure->setScale(2,2);
@@ -93,7 +94,7 @@ void EntryPoint::ClearRoom()
 
 void EntryPoint::EnterRoom()
 {
-	Room* actualRoom = dungeon->getRoom(player.X,player.Y);
+	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 	_updateDoor();
 	_AddTreasure();
 	_SpawnEnemy();
@@ -101,16 +102,16 @@ void EntryPoint::EnterRoom()
 }
 
 void EntryPoint::_updateDoor() {
-	if (dungeon->AllRoom[player.X + 1][player.Y] != nullptr) _doorRight->setVisible(true);
+	if (dungeon->AllRoom[player->getPosX() + 1][player->getPosY()] != nullptr) _doorRight->setVisible(true);
 	else _doorRight->setVisible(false);
 
-	if (player.X > 0 && dungeon->AllRoom[player.X - 1][player.Y] != nullptr) _doorLeft->setVisible(true);
+	if (player->getPosX() > 0 && dungeon->AllRoom[player->getPosX() - 1][player->getPosY()] != nullptr) _doorLeft->setVisible(true);
 	else _doorLeft->setVisible(false);
 
-	if (player.Y > 0 && dungeon->AllRoom[player.X][player.Y - 1] != nullptr) _doorDown->setVisible(true);
+	if (player->getPosY() > 0 && dungeon->AllRoom[player->getPosX()][player->getPosY() - 1] != nullptr) _doorDown->setVisible(true);
 	else _doorDown->setVisible(false);
 
-	if (dungeon->AllRoom[player.X][player.Y+1] != nullptr) _doorUp->setVisible(true);
+	if (dungeon->AllRoom[player->getPosX()][player->getPosY() +1] != nullptr) _doorUp->setVisible(true);
 	else _doorUp->setVisible(false);
 }
 
@@ -155,7 +156,7 @@ void EntryPoint::_DrawMap()
 
 	//add player icon
 	_playerIcon = Sprite::create("player_icon.png");
-	_playerIcon->setPosition(100 + player.X * roomWidth / 2, 100 + player.Y * roomHeight / 2);
+	_playerIcon->setPosition(100 + player->getPosX() * roomWidth / 2, 100 + player->getPosY() * roomHeight / 2);
 	_playerIcon->setScale(0.3, 0.3);
 	_map->addChild(_playerIcon);
 
@@ -171,7 +172,7 @@ void EntryPoint::_updateMap()
 	float roomHeight = size.height;
 
 	//move player icon
-	_playerIcon->setPosition(100 + player.X * roomWidth / 2, 100 + player.Y * roomHeight / 2);
+	_playerIcon->setPosition(100 + player->getPosX() * roomWidth / 2, 100 + player->getPosY() * roomHeight / 2);
 
 	//put map on top of every other sprites
 	auto spriteParent = _map->getParent();
@@ -211,7 +212,7 @@ void EntryPoint::MovePlayer(Vec3 pos)
 
 void EntryPoint::_SpawnEnemy()
 {
-	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
+	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 	Enemy* E = actualRoom->getEnemy1();
 	tempName = enemiesSprites[E->GetSprite()];
 	_enemy = Sprite::create(tempName);
@@ -260,7 +261,7 @@ void EntryPoint::_AddDoorDown() {
 void EntryPoint::Update(float delta_time)
 {
 	_total_time += delta_time;
-	_time_label->setString(std::to_string(player.X)+ " " +std::to_string(player.Y));
+	_time_label->setString(std::to_string(player->getPosX())+ " " +std::to_string(player->getPosY()));
 
 }
 
@@ -312,8 +313,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						RemoveSelf::create(),
 						nullptr
 					));
-				player.gold++;
-				_gold_label->setString("Player gold : " + std::to_string(player.gold));
+				player->AddGold(1);
+				_gold_label->setString("Player gold : " + std::to_string(player->getGold()));
 				_treasure->removeFromParent();
 				_treasure = nullptr;
 			}
@@ -337,7 +338,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						// destroy the sprite at the end
 						RemoveSelf::create(),
 						CallFunc::create([=] {
-							player.X--;
+							player->moveLeft();
 							ClearRoom();
 							EnterRoom();
 							SpawnPlayer();
@@ -365,7 +366,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						// destroy the sprite at the end
 						RemoveSelf::create(),
 						CallFunc::create([=] {
-							player.X++;
+							player->moveRight();
 							ClearRoom();
 							EnterRoom();
 							SpawnPlayer();
@@ -394,7 +395,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						// destroy the sprite at the end
 						RemoveSelf::create(),
 						CallFunc::create([=] {
-							player.Y++;
+							player->moveUp();
 							ClearRoom();
 							EnterRoom();
 							SpawnPlayer(); 
@@ -424,7 +425,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						// destroy the sprite at the end
 						RemoveSelf::create(),
 						CallFunc::create([=] {
-							player.Y--;
+							player->moveDown();
 							ClearRoom();
 							EnterRoom();
 							SpawnPlayer();
