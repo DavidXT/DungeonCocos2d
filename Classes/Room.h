@@ -18,4 +18,6 @@ public:
 	Enemy* getEnemy2() { return E2; };
 	int getTreasurePosX() {return treasurePosX;};
 	int getTreasurePosY() {return treasurePosY;};
+	int getX() { return posX; }
+	int getY() { return posY; }
 };

@@ -142,6 +142,9 @@ void EntryPoint::_DrawMap()
 		for (Room* r : line) {
 
 			if (r != nullptr) {//room exist, add sprite
+
+				log("%d , %d", r->getX(), r->getY());
+
 				_rooms.push_back(Sprite::create("room.png"));
 				_rooms[x + y]->setPosition(100 + x * roomWidth / 2, 100 + y * roomHeight/2);
 				_rooms[x + y]->setScale(0.5, 0.5);
