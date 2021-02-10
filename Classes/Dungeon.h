@@ -1,12 +1,12 @@
 #pragma once
-
-class Room;
+#include <vector>
+#include "Room.h"
 
 class Dungeon
 {
-	std::vector<std::vector<Room*>> AllRoom;
-public:
-	Dungeon(int, int);
-};
 
+public:
+	Dungeon(int,int, int);
+	std::vector<std::vector<Room*>> AllRoom;
+};
 

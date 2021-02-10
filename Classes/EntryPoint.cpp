@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "Dungeon.h"
 #include <time.h>
-#include <time.h>
 
 
 USING_NS_CC;
@@ -63,12 +62,9 @@ void EntryPoint::Init(Node *parent)
 	parent->addChild(menu, 1);
 
 	//Génération du donjon
-	dungeon = new Dungeon(10,7);
+	dungeon = new Dungeon(10,10,7);
 	//Génération des portes au début du donjon
-	_AddDoorLeft();
-	_AddDoorRight();
-	_AddDoorUp();
-	_AddDoorDown();
+	SpawnDoor();
 
 	_AddTreasure();
 	_SpawnEnemy();
@@ -94,17 +90,49 @@ void EntryPoint::ClearRoom()
 		_treasure->removeFromParent();
 		_treasure = nullptr;
 	}
+	if (_doorLeft != nullptr) {
+		_doorLeft->removeFromParent();
+		_doorLeft = nullptr;
+	}
+	if (_doorRight != nullptr) {
+		_doorRight->removeFromParent();
+		_doorRight = nullptr;
+	}
+	if (_doorUp != nullptr) {
+		_doorUp->removeFromParent();
+		_doorUp = nullptr;
+	}
+	if (_doorDown != nullptr) {
+		_doorDown->removeFromParent();
+		_doorDown = nullptr;
+	}
 }
 
 void EntryPoint::EnterRoom()
 {
-	_AddDoorLeft();
-	_AddDoorRight();
-	_AddDoorUp();
-	_AddDoorDown();
-
+	SpawnDoor();
 	_AddTreasure();
 	_SpawnEnemy();
+}
+
+void EntryPoint::SpawnDoor() {
+	if (dungeon->AllRoom[player.X+1][player.Y] != nullptr) {
+		_AddDoorRight();
+	}
+	if (player.X > 0) {
+		if (dungeon->AllRoom[player.X - 1][player.Y] != nullptr) {
+			_AddDoorLeft();
+		}
+	}
+	if (player.Y > 0) {
+		if (dungeon->AllRoom[player.X][player.Y - 1] != nullptr) {
+			_AddDoorDown();
+		}
+	}
+	if (dungeon->AllRoom[player.X][player.Y+1] != nullptr) {
+		_AddDoorUp();
+	}
+
 }
 
 void EntryPoint::_SpawnEnemy()

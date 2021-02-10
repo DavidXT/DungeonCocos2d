@@ -5,8 +5,7 @@ class Room
 	int posY;
 	bool haveChest;
 
-protected:
+public:
 	Room(int x, int y);
 	void TakeChest();
 };
-
