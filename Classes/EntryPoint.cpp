@@ -102,7 +102,7 @@ void EntryPoint::EnterRoom()
 }
 
 void EntryPoint::_updateDoor() {
-	if (dungeon->AllRoom[player->getPosX() + 1][player->getPosY()] != nullptr) _doorRight->setVisible(true);
+	if (player->getPosX() < dungeon->getSizeX() && dungeon->AllRoom[player->getPosX() + 1][player->getPosY()] != nullptr) _doorRight->setVisible(true);
 	else _doorRight->setVisible(false);
 
 	if (player->getPosX() > 0 && dungeon->AllRoom[player->getPosX() - 1][player->getPosY()] != nullptr) _doorLeft->setVisible(true);
@@ -111,7 +111,7 @@ void EntryPoint::_updateDoor() {
 	if (player->getPosY() > 0 && dungeon->AllRoom[player->getPosX()][player->getPosY() - 1] != nullptr) _doorDown->setVisible(true);
 	else _doorDown->setVisible(false);
 
-	if (dungeon->AllRoom[player->getPosX()][player->getPosY() +1] != nullptr) _doorUp->setVisible(true);
+	if (player->getPosY() < dungeon->getSizeY() && dungeon->AllRoom[player->getPosX()][player->getPosY() +1] != nullptr) _doorUp->setVisible(true);
 	else _doorUp->setVisible(false);
 }
 
