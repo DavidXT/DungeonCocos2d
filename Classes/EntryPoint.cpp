@@ -18,7 +18,6 @@ const int ScreenHeight = 768;
 Dungeon* dungeon;
 Player* player;
 
-
 void EntryPoint::Init(Node *parent)
 {
 	srand(time(NULL));
@@ -36,7 +35,7 @@ void EntryPoint::Init(Node *parent)
 	_parent->addChild(_background);
 
 	// labels
-	_gold_label = Label::createWithTTF("0", DEFAULT_FONT, 24);
+	_gold_label = Label::createWithTTF("Player gold : 0", DEFAULT_FONT, 24);
 	_gold_label->setPosition(100, 100);
 
 	_time_label = Label::createWithTTF("", DEFAULT_FONT, 24);
@@ -313,7 +312,25 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						RemoveSelf::create(),
 						nullptr
 					));
-				player->AddGold(1);
+
+				int gold = randomInt(5, 10);
+				player->AddGold(gold);
+
+				auto gold_get = Label::createWithTTF(std::to_string(gold) + " Golds", DEFAULT_FONT, 36);
+				gold_get->setTextColor(Color4B::YELLOW);
+				gold_get->setPosition(_treasure->getPosition());
+				_parent->addChild(gold_get);
+				// run a complex action
+				gold_get->runAction(
+					// action is a sequence of actions
+					Sequence::create(
+						// then zoom and fade the sprite
+						MoveTo::create(1.2, Vec2(gold_get->getPosition().x, gold_get->getPosition().y + 60)),
+						// destroy the sprite at the end
+						RemoveSelf::create(),
+						nullptr
+					));
+
 				_gold_label->setString("Player gold : " + std::to_string(player->getGold()));
 				_treasure->removeFromParent();
 				_treasure = nullptr;
@@ -458,8 +475,11 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
 			}
 		}
-
-
 	}
+
 }
 
+//return a random int beetween min(inclusive) and max(inclusive)
+int EntryPoint::randomInt(int min, int max) {
+	return rand() % (max - min + 1) + min;
+}

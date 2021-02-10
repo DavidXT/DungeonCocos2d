@@ -12,6 +12,7 @@ public:
 	// down is true if it's pressing.
 	// down is false if the touch is released
 	void Touch(cocos2d::Vec2 position, bool down);
+	int randomInt(int, int);
 
 protected:
 	void ClearRoom();
