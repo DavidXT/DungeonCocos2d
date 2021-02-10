@@ -24,6 +24,9 @@ protected:
 	void _AddDoorUp();
 	void _AddDoorDown();
 	void _SpawnDoor();
+
+	void SpawnPlayer();
+	void MovePlayer();
 	
 
 	cocos2d::Node* _parent{ nullptr };
@@ -33,6 +36,7 @@ protected:
 	cocos2d::Sprite* _enemy{ nullptr };
 	cocos2d::Sprite* _enemy2{ nullptr };
 	cocos2d::Sprite* _background{ nullptr };
+	cocos2d::Sprite* _player { nullptr };
 	cocos2d::Sprite* _tempSprite{ nullptr };
 	cocos2d::Sprite* _doorLeft{ nullptr };
 	cocos2d::Sprite* _doorRight{ nullptr };

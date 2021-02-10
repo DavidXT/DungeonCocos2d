@@ -54,6 +54,7 @@ void EntryPoint::Init(Node *parent)
 	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
 	_AddTreasure();
 	_SpawnEnemy();
+	SpawnPlayer();
 }
 
 void EntryPoint::_AddTreasure()
@@ -76,6 +77,9 @@ void EntryPoint::ClearRoom()
 		_enemy2->removeFromParent();
 		_enemy2 = nullptr;
 	}
+	_player->removeFromParent();
+	_player = nullptr;
+
 	if (_treasure != nullptr)
 	{
 		_treasure->removeFromParent();
@@ -126,6 +130,36 @@ void EntryPoint::_SpawnDoor() {
 	}
 
 }
+
+void EntryPoint::SpawnPlayer()
+{
+	_player = Sprite::create("mob_1.png");
+	_player->setPosition(ScreenWidth / 2, ScreenHeight / 2);
+	_player->setScale(1.1, 1.1);
+	_parent->addChild(_player);
+}
+
+/*
+void EntryPoint::MovePlayer(Vec3 pos)
+{
+	_player->runAction(
+		// action is a sequence of actions
+		Sequence::create(
+			// first wait 0.2f seconds
+			DelayTime::create(0.2f),
+			// then zoom and fade the sprite
+			Spawn::createWithTwoActions(
+				//ScaleTo::create(0.5f, _player->getScale() * 2.0f),
+				MoveTo::create(5, pos),
+				// then fade out the sprite
+				FadeTo::create(0.5f, 0)),
+			// destroy the sprite at the end
+			RemoveSelf::create(),
+			CallFunc::create()
+			nullptr
+		));
+}
+*/
 
 void EntryPoint::_SpawnEnemy()
 {
@@ -236,9 +270,24 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				player.X--;
-				ClearRoom();
-				EnterRoom();
+				_player->runAction(
+					// action is a sequence of actions
+					Sequence::create(
+						// first wait 0.2f seconds
+						DelayTime::create(0.2f),
+						MoveTo::create(2, _doorLeft->getPosition()),
+						// then zoom and fade the sprite
+
+						// destroy the sprite at the end
+						RemoveSelf::create(),
+						CallFunc::create([=] {
+							player.X--;
+							ClearRoom();
+							EnterRoom();
+							SpawnPlayer();
+							}),
+						nullptr
+								));
 			}
 		}
 		if (_doorRight) {
@@ -249,9 +298,24 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				player.X++;
-				ClearRoom();
-				EnterRoom();
+				_player->runAction(
+					// action is a sequence of actions
+					Sequence::create(
+						// first wait 0.2f seconds
+						DelayTime::create(0.2f),
+						MoveTo::create(2, _doorRight->getPosition()),
+						// then zoom and fade the sprite
+
+						// destroy the sprite at the end
+						RemoveSelf::create(),
+						CallFunc::create([=] {
+							player.X++;
+							ClearRoom();
+							EnterRoom();
+							SpawnPlayer();
+							}),
+						nullptr
+								));
 			}
 
 		}
@@ -263,9 +327,26 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				player.Y++;
-				ClearRoom();
-				EnterRoom();
+				_player->runAction(
+					// action is a sequence of actions
+					Sequence::create(
+						// first wait 0.2f seconds
+						DelayTime::create(0.2f),
+						MoveTo::create(2, _doorUp->getPosition()),
+						// then zoom and fade the sprite
+						
+						// destroy the sprite at the end
+						RemoveSelf::create(),
+						CallFunc::create([=] {
+							player.Y++;
+							ClearRoom();
+							EnterRoom();
+							SpawnPlayer(); 
+						}),
+						nullptr
+					));
+
+
 			}
 		}
 		if (_doorDown) {
@@ -276,9 +357,24 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				player.Y--;
-				ClearRoom();
-				EnterRoom();
+				_player->runAction(
+					// action is a sequence of actions
+					Sequence::create(
+						// first wait 0.2f seconds
+						DelayTime::create(0.2f),
+						MoveTo::create(2, _doorDown->getPosition()),
+						// then zoom and fade the sprite
+
+						// destroy the sprite at the end
+						RemoveSelf::create(),
+						CallFunc::create([=] {
+							player.Y--;
+							ClearRoom();
+							EnterRoom();
+							SpawnPlayer();
+							}),
+						nullptr
+								));
 			}
 		}
 
