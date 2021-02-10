@@ -27,6 +27,7 @@ protected:
 
 	void _DrawMap();
 	void _mapOnOff() { _map->setVisible(!_map->isVisible()); }
+	void _updateMap();
 
 	void SpawnPlayer();
 	void MovePlayer();
@@ -48,6 +49,7 @@ protected:
 	cocos2d::Sprite* _mapButton{ nullptr };
 	cocos2d::Sprite* _map{ nullptr };
 	cocos2d::Sprite* _room{ nullptr };
+	cocos2d::Sprite* _playerIcon{ nullptr };
 	std::vector<cocos2d::Sprite*> _rooms;
 	float _total_time{ 0 };
 };

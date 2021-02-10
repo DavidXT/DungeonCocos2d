@@ -109,6 +109,7 @@ void EntryPoint::EnterRoom()
 	_SpawnDoor();
 	_AddTreasure();
 	_SpawnEnemy();
+	_updateMap();
 }
 
 void EntryPoint::_SpawnDoor() {
@@ -169,8 +170,32 @@ void EntryPoint::_DrawMap()
 		}
 		x++;
 	}
+
+	//add player icon
+	_playerIcon = Sprite::create("player_icon.png");
+	_playerIcon->setPosition(100 + player.X * roomWidth / 2, 100 + player.Y * roomHeight / 2);
+	_playerIcon->setScale(0.3, 0.3);
+	_map->addChild(_playerIcon);
+
 	_map->setVisible(false);
 }
+
+void EntryPoint::_updateMap()
+{
+	//room size
+	_room = Sprite::create("room.png");
+	Size size = _room->getContentSize();
+	float roomWidth = size.width;
+	float roomHeight = size.height;
+
+	//move player icon
+	_playerIcon->setPosition(100 + player.X * roomWidth / 2, 100 + player.Y * roomHeight / 2);
+
+	//put map on top of every other sprites
+	auto spriteParent = _map->getParent();
+	spriteParent->reorderChild(_map, (int)spriteParent->getChildrenCount() - 1);
+}
+
 
 void EntryPoint::SpawnPlayer()
 {
