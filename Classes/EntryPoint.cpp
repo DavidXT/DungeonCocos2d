@@ -109,7 +109,6 @@ void EntryPoint::EnterRoom()
 	_SpawnDoor();
 	_AddTreasure();
 	_SpawnEnemy();
-	_DrawMap();
 }
 
 void EntryPoint::_SpawnDoor() {
@@ -139,6 +138,28 @@ void EntryPoint::_DrawMap()
 	_map->setScale(2, 2);
 	_parent->addChild(_map);
 
+	_room = Sprite::create("room.png");
+	Size size = _room->getContentSize();
+	float roomWidth = size.width;
+	float roomHeight = size.height;
+
+	int x = 0;
+	int y = 0;
+	for (std::vector<Room*> line : dungeon->AllRoom) {
+		y = 0;
+		for (Room* r : line) {
+
+			if (r != nullptr) {
+				_rooms.push_back(Sprite::create("room.png"));
+				_rooms[x + y]->setPosition(100 + x * roomWidth / 2, 100 + y * roomHeight/2);
+				_rooms[x + y]->setScale(0.5, 0.5);
+				_map->addChild(_rooms[_rooms.size()-1]);
+			}
+
+			y++;
+		}
+		x++;
+	}
 }
 
 void EntryPoint::SpawnPlayer()

@@ -45,7 +45,8 @@ protected:
 	cocos2d::Sprite* _doorUp{ nullptr };
 	cocos2d::Sprite* _doorDown{ nullptr };
 	cocos2d::Sprite* _map{ nullptr };
-	cocos2d::Sprite* _map1{ nullptr };
+	cocos2d::Sprite* _room{ nullptr };
+	std::vector<cocos2d::Sprite*> _rooms;
 	float _total_time{ 0 };
 };
 
