@@ -23,7 +23,7 @@ protected:
 	void _AddDoorRight();
 	void _AddDoorUp();
 	void _AddDoorDown();
-	void _SpawnDoor();
+	void _updateDoor();
 
 	void _DrawMap();
 	void _mapOnOff() { _map->setVisible(!_map->isVisible()); }

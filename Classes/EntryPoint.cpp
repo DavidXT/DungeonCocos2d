@@ -49,7 +49,11 @@ void EntryPoint::Init(Node *parent)
 	//Génération du donjon
 	dungeon = new Dungeon(10,10,7);
 	//Génération des portes au début du donjon
-	_SpawnDoor();
+	_AddDoorDown();
+	_AddDoorUp();
+	_AddDoorLeft();
+	_AddDoorRight();
+	_updateDoor();
 	Room* actualRoom = dungeon->getRoom(player.X, player.Y);
 	_AddTreasure();
 	_SpawnEnemy();
@@ -85,51 +89,29 @@ void EntryPoint::ClearRoom()
 		_treasure->removeFromParent();
 		_treasure = nullptr;
 	}
-	if (_doorLeft != nullptr) {
-		_doorLeft->removeFromParent();
-		_doorLeft = nullptr;
-	}
-	if (_doorRight != nullptr) {
-		_doorRight->removeFromParent();
-		_doorRight = nullptr;
-	}
-	if (_doorUp != nullptr) {
-		_doorUp->removeFromParent();
-		_doorUp = nullptr;
-	}
-	if (_doorDown != nullptr) {
-		_doorDown->removeFromParent();
-		_doorDown = nullptr;
-	}
 }
 
 void EntryPoint::EnterRoom()
 {
 	Room* actualRoom = dungeon->getRoom(player.X,player.Y);
-	_SpawnDoor();
+	_updateDoor();
 	_AddTreasure();
 	_SpawnEnemy();
 	_updateMap();
 }
 
-void EntryPoint::_SpawnDoor() {
-	if (dungeon->AllRoom[player.X+1][player.Y] != nullptr) {
-		_AddDoorRight();
-	}
-	if (player.X > 0) {
-		if (dungeon->AllRoom[player.X - 1][player.Y] != nullptr) {
-			_AddDoorLeft();
-		}
-	}
-	if (player.Y > 0) {
-		if (dungeon->AllRoom[player.X][player.Y - 1] != nullptr) {
-			_AddDoorDown();
-		}
-	}
-	if (dungeon->AllRoom[player.X][player.Y+1] != nullptr) {
-		_AddDoorUp();
-	}
+void EntryPoint::_updateDoor() {
+	if (dungeon->AllRoom[player.X + 1][player.Y] != nullptr) _doorRight->setVisible(true);
+	else _doorRight->setVisible(false);
 
+	if (player.X > 0 && dungeon->AllRoom[player.X - 1][player.Y] != nullptr) _doorLeft->setVisible(true);
+	else _doorLeft->setVisible(false);
+
+	if (player.Y > 0 && dungeon->AllRoom[player.X][player.Y - 1] != nullptr) _doorDown->setVisible(true);
+	else _doorDown->setVisible(false);
+
+	if (dungeon->AllRoom[player.X][player.Y+1] != nullptr) _doorUp->setVisible(true);
+	else _doorUp->setVisible(false);
 }
 
 void EntryPoint::_DrawMap()
@@ -336,7 +318,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 				_treasure = nullptr;
 			}
 		}
-		if (_doorLeft) {
+		if (_doorLeft->isVisible()) {
 			// convert coordinates to the treasure coordinations
 			auto node_p = _doorLeft->convertToNodeSpace(position);
 			// get the size of the treasure
@@ -364,7 +346,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 								));
 			}
 		}
-		if (_doorRight) {
+		if (_doorRight->isVisible()) {
 			// convert coordinates to the treasure coordinations
 			auto node_p = _doorRight->convertToNodeSpace(position);
 			// get the size of the treasure
@@ -393,7 +375,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			}
 
 		}
-		if (_doorUp) {
+		if (_doorUp->isVisible()) {
 			// convert coordinates to the treasure coordinations
 			auto node_p = _doorUp->convertToNodeSpace(position);
 			// get the size of the treasure
@@ -423,7 +405,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 
 			}
 		}
-		if (_doorDown) {
+		if (_doorDown->isVisible()) {
 			// convert coordinates to the treasure coordinations
 			auto node_p = _doorDown->convertToNodeSpace(position);
 			// get the size of the treasure
