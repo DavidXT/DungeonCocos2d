@@ -135,10 +135,8 @@ void EntryPoint::_DrawMap()
 	float roomHeight = size.height;
 
 	//go through dungeon room
-	int x = 0;
-	int y = 0;
+	int i = 0;
 	for (std::vector<Room*> line : dungeon->AllRoom) {
-		y = 0;
 		for (Room* r : line) {
 
 			if (r != nullptr) {//room exist, add sprite
@@ -146,14 +144,13 @@ void EntryPoint::_DrawMap()
 				log("%d , %d", r->getX(), r->getY());
 
 				_rooms.push_back(Sprite::create("room.png"));
-				_rooms[x + y]->setPosition(100 + x * roomWidth / 2, 100 + y * roomHeight/2);
-				_rooms[x + y]->setScale(0.5, 0.5);
-				_map->addChild(_rooms[_rooms.size()-1]);
-			}
+				_rooms[i]->setPosition(100 + r->getX() * roomWidth / 2, 100 + r->getY() * roomHeight/2);
+				_rooms[i]->setScale(0.5, 0.5);
+				_map->addChild(_rooms[i]);
 
-			y++;
+				i++;
+			}
 		}
-		x++;
 	}
 
 	//add player icon
