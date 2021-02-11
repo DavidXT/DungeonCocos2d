@@ -30,6 +30,7 @@ protected:
 	void _mapOnOff() { _map->setVisible(!_map->isVisible()); }
 	void _updateMap();
 
+	void _SpawnExit();
 	void SpawnPlayer();
 	void MovePlayer();
 	
@@ -51,6 +52,7 @@ protected:
 	cocos2d::Sprite* _map{ nullptr };
 	cocos2d::Sprite* _room{ nullptr };
 	cocos2d::Sprite* _playerIcon{ nullptr };
+	cocos2d::Sprite* _exit{ nullptr };
 	std::vector<cocos2d::Sprite*> _rooms;
 	float _total_time{ 0 };
 };

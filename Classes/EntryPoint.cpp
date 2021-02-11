@@ -89,6 +89,10 @@ void EntryPoint::ClearRoom()
 		_treasure->removeFromParent();
 		_treasure = nullptr;
 	}
+	if (_exit != nullptr) {
+		_exit->removeFromParent();
+		_exit = nullptr;
+	}
 }
 
 void EntryPoint::EnterRoom()
@@ -97,6 +101,9 @@ void EntryPoint::EnterRoom()
 	_updateDoor();
 	if (actualRoom->getTreasure()) {
 		_AddTreasure();
+	}
+	if (dungeon->getWinX() == player->getPosX() && dungeon->getWinY() == player->getPosY()) {
+		_SpawnExit();
 	}
 	_SpawnEnemy();
 	_updateMap();
@@ -189,6 +196,12 @@ void EntryPoint::SpawnPlayer()
 	_parent->addChild(_player);
 }
 
+void EntryPoint::_SpawnExit() {
+	_exit = Sprite::create("exit.png");
+	_exit->setPosition(400, 400);
+	_exit->setScale(1.1, 1.1);
+	_parent->addChild(_exit);
+}
 /*
 void EntryPoint::MovePlayer(Vec3 pos)
 {
@@ -476,6 +489,17 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
+			}
+		}
+		if (_exit) {
+			// convert coordinates to the treasure coordinations
+			auto node_p = _exit->convertToNodeSpace(position);
+			// get the size of the treasure
+			auto cs = _exit->getContentSize();
+			// check if the touch position is inside
+			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
+			{
+				Director::getInstance()->end();
 			}
 		}
 	}
