@@ -28,6 +28,10 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 					if (AllRoom[currentX][currentY] == nullptr) {
 						AllRoom[currentX][currentY] = new Room(currentX, currentY);
 						j++;
+						if (j == nbRoom) {
+							winX = currentX;
+							winY = currentY;
+						}
 					}
 				}
 			}
@@ -36,6 +40,10 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 					if (AllRoom[currentX][currentY] == nullptr) {
 						AllRoom[currentX][currentY] = new Room(currentX, currentY);
 						j++;
+						if (j == nbRoom) {
+							winX = currentX;
+							winY = currentY;
+						}
 					}
 				}
 			}
@@ -46,6 +54,10 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 				if (AllRoom[currentX][currentY] == nullptr) {
 					AllRoom[currentX][currentY] = new Room(currentX, currentY);
 					j++;
+					if (j == nbRoom) {
+						winX = currentX;
+						winY = currentY;
+					}
 				}
 			}
 		}
@@ -54,6 +66,10 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 				if (AllRoom[currentX][currentY] == nullptr) {
 					AllRoom[currentX][currentY] = new Room(currentX, currentY);
 					j++;
+					if (j == nbRoom) {
+						winX = currentX;
+						winY = currentY;
+					}
 				}
 			}
 		}
