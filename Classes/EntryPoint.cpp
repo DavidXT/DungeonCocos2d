@@ -95,7 +95,9 @@ void EntryPoint::EnterRoom()
 {
 	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 	_updateDoor();
-	_AddTreasure();
+	if (actualRoom->getTreasure()) {
+		_AddTreasure();
+	}
 	_SpawnEnemy();
 	_updateMap();
 }
@@ -283,6 +285,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 		}
 		if (_treasure)
 		{
+			Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 			// convert coordinates to the treasure coordinations
 			auto node_p = _treasure->convertToNodeSpace(position);
 			// get the size of the treasure
@@ -330,7 +333,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						RemoveSelf::create(),
 						nullptr
 					));
-
+				actualRoom->TakeChest();
 				_gold_label->setString("Player gold : " + std::to_string(player->getGold()));
 				_treasure->removeFromParent();
 				_treasure = nullptr;

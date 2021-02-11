@@ -16,6 +16,7 @@ public:
 	void TakeChest();
 	Enemy* getEnemy1() { return E1; };
 	Enemy* getEnemy2() { return E2; };
+	bool getTreasure() { return haveChest; };
 	int getTreasurePosX() {return treasurePosX;};
 	int getTreasurePosY() {return treasurePosY;};
 	int getX() { return posX; }
