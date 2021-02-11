@@ -15,21 +15,26 @@ public:
 	int randomInt(int, int);
 
 protected:
+
+	//New room cleaning system
 	void ClearRoom();
 	void ClearPlayer();
 	void ClearPlayerAnim();
 	void EnterRoom();
 
-	//Function spawning enemy and treasure chest
+	//Spawn object in rooms
 	void _AddTreasure();
 	void _SpawnEnemy();
+	void _SpawnExit();
+	void _SpawnPlayer();
 
-	//Function Door
+	//Door systems
 	void _AddDoorLeft();
 	void _AddDoorRight();
 	void _AddDoorUp();
 	void _AddDoorDown();
 	void _updateDoor();
+
 
 	//Player movment functions
 	void DisableDoors();
@@ -37,14 +42,13 @@ protected:
 	void UpdatePlayerPos(std::string direction);
 	void UpdatePlayerSprite(std::string direction);
 
+	//Minimap system
 	void _DrawMap();
 	void _mapOnOff() { _map->setVisible(!_map->isVisible()); }
 	void _updateMap();
-
-	void _SpawnExit();
-	void SpawnPlayer();
 	
 
+	//Values
 	cocos2d::Node* _parent{ nullptr };
 	cocos2d::Label* _gold_label{ nullptr };
 	cocos2d::Label* _time_label{ nullptr };

@@ -35,8 +35,9 @@ void EntryPoint::Init(Node *parent)
 	_parent->addChild(_background);
 
 	// labels
-	_gold_label = Label::createWithTTF("Player gold : 0", DEFAULT_FONT, 24);
-	_gold_label->setPosition(100, 100);
+	_gold_label = Label::createWithTTF("0", DEFAULT_FONT, 24);
+	_gold_label->setTextColor(Color4B::YELLOW);
+	_gold_label->setPosition(1000, 750);
 
 	_time_label = Label::createWithTTF("", DEFAULT_FONT, 24);
 	_time_label->setPosition(0, 0);
@@ -57,10 +58,13 @@ void EntryPoint::Init(Node *parent)
 	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 	_AddTreasure();
 	_SpawnEnemy();
-	SpawnPlayer();
+	_SpawnPlayer();
 	_DrawMap();
 }
 
+/// <summary>
+/// Spawn treasure in room
+/// </summary>
 void EntryPoint::_AddTreasure()
 {
 	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
@@ -71,6 +75,9 @@ void EntryPoint::_AddTreasure()
 	_parent->addChild(_treasure);
 }
 
+/// <summary>
+/// Clear and remove player sprite
+/// </summary>
 void EntryPoint::ClearPlayer()
 {
 	if (_player != nullptr) {
@@ -79,6 +86,9 @@ void EntryPoint::ClearPlayer()
 	}
 }
 
+/// <summary>
+/// Clear and remove player with anim. sprite (when player move)
+/// </summary>
 void EntryPoint::ClearPlayerAnim()
 {
 	if (_newPlayer != nullptr) {
@@ -211,8 +221,10 @@ void EntryPoint::_updateMap()
 	spriteParent->reorderChild(_map, (int)spriteParent->getChildrenCount() - 1);
 }
 
-
-void EntryPoint::SpawnPlayer()
+/// <summary>
+/// Spawn Player Sprite in center of the room
+/// </summary>
+void EntryPoint::_SpawnPlayer()
 {
 	_player = Sprite::create("player.png");
 	_player->setPosition(ScreenWidth / 2, ScreenHeight / 2);
@@ -220,6 +232,9 @@ void EntryPoint::SpawnPlayer()
 	_parent->addChild(_player);
 }
 
+/// <summary>
+/// Spawn exit door in the room
+/// </summary>
 void EntryPoint::_SpawnExit() {
 	_exit = Sprite::create("exit.png");
 	_exit->setPosition(400, 400);
@@ -227,6 +242,9 @@ void EntryPoint::_SpawnExit() {
 	_parent->addChild(_exit);
 }
 
+/// <summary>
+/// Spawn enemy in room if room have enemy
+/// </summary>
 void EntryPoint::_SpawnEnemy()
 {
 	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
@@ -355,7 +373,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 						nullptr
 					));
 				actualRoom->TakeChest();
-				_gold_label->setString("Player gold : " + std::to_string(player->getGold()));
+				_gold_label->setString(std::to_string(player->getGold()));
+				
 				_treasure->removeFromParent();
 				_treasure = nullptr;
 			}
@@ -417,7 +436,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
+				SimpleAudioEngine::getInstance()->setEffectsVolume(0.7);
+				SimpleAudioEngine::getInstance()->playEffect("explode.wav");
 				actualRoom->killE1();
 				_enemy->removeFromParent();
 				_enemy = nullptr;
@@ -433,7 +453,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
+				SimpleAudioEngine::getInstance()->setEffectsVolume(0.7);
+				SimpleAudioEngine::getInstance()->playEffect("explode.wav");
 				actualRoom->killE2();
 				_enemy2->removeFromParent();
 				_enemy2 = nullptr;
@@ -462,6 +483,11 @@ int EntryPoint::randomInt(int min, int max) {
 
 //Player movement system functions
 
+/// <summary>
+/// Move player to an another room
+/// </summary>
+/// <param name="object"> Door sprite object </param>
+/// <param name="direction"> Direction for player movement </param>
 void EntryPoint::_MovePlayer(cocos2d::Sprite* object, std::string direction)
 {
 	DisableDoors();
@@ -471,7 +497,11 @@ void EntryPoint::_MovePlayer(cocos2d::Sprite* object, std::string direction)
 		// action is a sequence of actions
 		Sequence::create(
 			// first wait 0.2f seconds
-			DelayTime::create(0.2f),
+			//DelayTime::create(0.1f),
+			CallFunc::create([=] {
+				SimpleAudioEngine::getInstance()->playEffect("running.wav");
+				}),
+
 			MoveTo::create(2, object->getPosition()),
 			// then zoom and fade the sprite
 
@@ -481,7 +511,7 @@ void EntryPoint::_MovePlayer(cocos2d::Sprite* object, std::string direction)
 				UpdatePlayerPos(direction);
 				ClearRoom();
 				EnterRoom();
-				SpawnPlayer();
+				_SpawnPlayer();
 				canClick = true;
 				}),
 			nullptr
@@ -489,6 +519,10 @@ void EntryPoint::_MovePlayer(cocos2d::Sprite* object, std::string direction)
 
 }
 
+/// <summary>
+/// Update player position coordinates
+/// </summary>
+/// <param name="direction"> Direction for player movement </param>
 void EntryPoint::UpdatePlayerPos(std::string direction)
 {
 	if (direction == "down")
@@ -509,6 +543,10 @@ void EntryPoint::UpdatePlayerPos(std::string direction)
 	}
 }
 
+/// <summary>
+/// Update player sprite depend of choose direction
+/// </summary>
+/// <param name="direction"> Direction for player movement </param>
 void EntryPoint::UpdatePlayerSprite(std::string direction)
 {
 	if (direction == "down")
@@ -535,6 +573,9 @@ void EntryPoint::UpdatePlayerSprite(std::string direction)
 	ClearPlayer();
 }
 
+/// <summary>
+/// Disable all door sprites to prevent spam click
+/// </summary>
 void EntryPoint::DisableDoors()
 {
 	if(_doorDown != nullptr)
