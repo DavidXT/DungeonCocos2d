@@ -8,7 +8,7 @@ USING_NS_CC;
 using namespace CocosDenshion;
 
 std::vector<std::string> enemiesSprites;
-int enemyCount;
+bool canClick = true;
 std::string tempName;
 
 
@@ -71,8 +71,28 @@ void EntryPoint::_AddTreasure()
 	_parent->addChild(_treasure);
 }
 
+void EntryPoint::ClearPlayer()
+{
+	if (_player != nullptr) {
+		_player->removeFromParent();
+		_player = nullptr;
+	}
+}
+
+void EntryPoint::ClearPlayerAnim()
+{
+	if (_newPlayer != nullptr) {
+		_newPlayer->removeFromParent();
+		_newPlayer = nullptr;
+	}
+}
+
+
 void EntryPoint::ClearRoom()
 {
+	ClearPlayer();
+	ClearPlayerAnim();
+
 	if (_enemy != nullptr) {
 		_enemy->removeFromParent();
 		_enemy = nullptr;
@@ -81,8 +101,6 @@ void EntryPoint::ClearRoom()
 		_enemy2->removeFromParent();
 		_enemy2 = nullptr;
 	}
-	_player->removeFromParent();
-	_player = nullptr;
 
 	if (_treasure != nullptr)
 	{
@@ -94,6 +112,8 @@ void EntryPoint::ClearRoom()
 		_exit = nullptr;
 	}
 }
+
+
 
 void EntryPoint::EnterRoom()
 {
@@ -190,9 +210,9 @@ void EntryPoint::_updateMap()
 
 void EntryPoint::SpawnPlayer()
 {
-	_player = Sprite::create("mob_1.png");
+	_player = Sprite::create("player.png");
 	_player->setPosition(ScreenWidth / 2, ScreenHeight / 2);
-	_player->setScale(1.1, 1.1);
+	_player->setScale(1.5, 1.5);
 	_parent->addChild(_player);
 }
 
@@ -202,27 +222,6 @@ void EntryPoint::_SpawnExit() {
 	_exit->setScale(1.1, 1.1);
 	_parent->addChild(_exit);
 }
-/*
-void EntryPoint::MovePlayer(Vec3 pos)
-{
-	_player->runAction(
-		// action is a sequence of actions
-		Sequence::create(
-			// first wait 0.2f seconds
-			DelayTime::create(0.2f),
-			// then zoom and fade the sprite
-			Spawn::createWithTwoActions(
-				//ScaleTo::create(0.5f, _player->getScale() * 2.0f),
-				MoveTo::create(5, pos),
-				// then fade out the sprite
-				FadeTo::create(0.5f, 0)),
-			// destroy the sprite at the end
-			RemoveSelf::create(),
-			CallFunc::create()
-			nullptr
-		));
-}
-*/
 
 void EntryPoint::_SpawnEnemy()
 {
@@ -285,8 +284,9 @@ void EntryPoint::Update(float delta_time)
 
 void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 {
-	if (down)
+	if (down == true || canClick == true)
 	{
+		canClick = false;
 		// display coords touched
 		std::stringstream ss;
 		ss << position.x << " " << position.y << std::endl;
@@ -364,24 +364,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				_player->runAction(
-					// action is a sequence of actions
-					Sequence::create(
-						// first wait 0.2f seconds
-						DelayTime::create(0.2f),
-						MoveTo::create(2, _doorLeft->getPosition()),
-						// then zoom and fade the sprite
 
-						// destroy the sprite at the end
-						RemoveSelf::create(),
-						CallFunc::create([=] {
-							player->moveLeft();
-							ClearRoom();
-							EnterRoom();
-							SpawnPlayer();
-							}),
-						nullptr
-								));
+				_MovePlayer(_doorLeft, "left");
 			}
 		}
 		if (_doorRight->isVisible()) {
@@ -392,24 +376,8 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				_player->runAction(
-					// action is a sequence of actions
-					Sequence::create(
-						// first wait 0.2f seconds
-						DelayTime::create(0.2f),
-						MoveTo::create(2, _doorRight->getPosition()),
-						// then zoom and fade the sprite
-
-						// destroy the sprite at the end
-						RemoveSelf::create(),
-						CallFunc::create([=] {
-							player->moveRight();
-							ClearRoom();
-							EnterRoom();
-							SpawnPlayer();
-							}),
-						nullptr
-								));
+			
+				_MovePlayer(_doorRight, "right");
 			}
 
 		}
@@ -421,26 +389,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				_player->runAction(
-					// action is a sequence of actions
-					Sequence::create(
-						// first wait 0.2f seconds
-						DelayTime::create(0.2f),
-						MoveTo::create(2, _doorUp->getPosition()),
-						// then zoom and fade the sprite
-						
-						// destroy the sprite at the end
-						RemoveSelf::create(),
-						CallFunc::create([=] {
-							player->moveUp();
-							ClearRoom();
-							EnterRoom();
-							SpawnPlayer(); 
-						}),
-						nullptr
-					));
-
-
+				_MovePlayer(_doorUp, "up");
 			}
 		}
 		if (_doorDown->isVisible()) {
@@ -451,24 +400,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			// check if the touch position is inside
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
-				_player->runAction(
-					// action is a sequence of actions
-					Sequence::create(
-						// first wait 0.2f seconds
-						DelayTime::create(0.2f),
-						MoveTo::create(2, _doorDown->getPosition()),
-						// then zoom and fade the sprite
-
-						// destroy the sprite at the end
-						RemoveSelf::create(),
-						CallFunc::create([=] {
-							player->moveDown();
-							ClearRoom();
-							EnterRoom();
-							SpawnPlayer();
-							}),
-						nullptr
-								));
+				_MovePlayer(_doorDown, "down");
 			}
 		}
 
@@ -521,4 +453,92 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 //return a random int beetween min(inclusive) and max(inclusive)
 int EntryPoint::randomInt(int min, int max) {
 	return rand() % (max - min + 1) + min;
+}
+
+
+//Player movement system functions
+
+void EntryPoint::_MovePlayer(cocos2d::Sprite* object, std::string direction)
+{
+	DisableDoors();
+	UpdatePlayerSprite(direction);
+
+	_newPlayer->runAction(
+		// action is a sequence of actions
+		Sequence::create(
+			// first wait 0.2f seconds
+			DelayTime::create(0.2f),
+			MoveTo::create(2, object->getPosition()),
+			// then zoom and fade the sprite
+
+			// destroy the sprite at the end
+			RemoveSelf::create(),
+			CallFunc::create([=] {
+				UpdatePlayerPos(direction);
+				ClearRoom();
+				EnterRoom();
+				SpawnPlayer();
+				canClick = true;
+				}),
+			nullptr
+					));
+
+}
+
+void EntryPoint::UpdatePlayerPos(std::string direction)
+{
+	if (direction == "down")
+	{
+		player->moveDown();
+	}
+	if (direction == "up")
+	{
+		player->moveUp();
+	}
+	if (direction == "left")
+	{
+		player->moveLeft();
+	}
+	if (direction == "right")
+	{
+		player->moveRight();
+	}
+}
+
+void EntryPoint::UpdatePlayerSprite(std::string direction)
+{
+	if (direction == "down")
+	{
+		_newPlayer = Sprite::create("player_down.png");
+	}
+	if (direction == "up")
+	{
+		_newPlayer = Sprite::create("player_up.png");
+	}
+	if (direction == "left")
+	{
+		_newPlayer = Sprite::create("player_left.png");
+	}
+	if (direction == "right")
+	{
+		_newPlayer = Sprite::create("player_right.png");
+	}
+
+	_newPlayer->setPosition(_player->getPosition());
+	_newPlayer->setScale(_player->getScale());
+	_parent->addChild(_newPlayer);
+
+	ClearPlayer();
+}
+
+void EntryPoint::DisableDoors()
+{
+	if(_doorDown != nullptr)
+		_doorDown->setVisible(false);
+	if (_doorUp != nullptr)
+		_doorUp->setVisible(false);
+	if (_doorLeft != nullptr)
+		_doorLeft->setVisible(false);
+	if (_doorRight != nullptr)
+		_doorRight->setVisible(false);
 }

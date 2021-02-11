@@ -16,6 +16,8 @@ public:
 
 protected:
 	void ClearRoom();
+	void ClearPlayer();
+	void ClearPlayerAnim();
 	void EnterRoom();
 
 	void _AddTreasure();
@@ -26,13 +28,18 @@ protected:
 	void _AddDoorDown();
 	void _updateDoor();
 
+	//Player movment functions
+	void DisableDoors();
+	void _MovePlayer(cocos2d::Sprite* object, std::string direction);
+	void UpdatePlayerPos(std::string direction);
+	void UpdatePlayerSprite(std::string direction);
+
 	void _DrawMap();
 	void _mapOnOff() { _map->setVisible(!_map->isVisible()); }
 	void _updateMap();
 
 	void _SpawnExit();
 	void SpawnPlayer();
-	void MovePlayer();
 	
 
 	cocos2d::Node* _parent{ nullptr };
@@ -43,6 +50,7 @@ protected:
 	cocos2d::Sprite* _enemy2{ nullptr };
 	cocos2d::Sprite* _background{ nullptr };
 	cocos2d::Sprite* _player { nullptr };
+	cocos2d::Sprite* _newPlayer { nullptr };
 	cocos2d::Sprite* _tempSprite{ nullptr };
 	cocos2d::Sprite* _doorLeft{ nullptr };
 	cocos2d::Sprite* _doorRight{ nullptr };
