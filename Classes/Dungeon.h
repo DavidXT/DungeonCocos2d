@@ -9,9 +9,10 @@ class Dungeon
 	int winX;
 	int winY;
 public:
-	Dungeon(int,int, int);
+	Dungeon(int,int, int); //Constructor
+	std::vector<std::vector<Room*>> AllRoom; //Array of room
+	//Getter
 	Room* getRoom(int, int);
-	std::vector<std::vector<Room*>> AllRoom;
 	int getSizeX() { return sizeX; };
 	int getSizeY() { return sizeY; };
 	int getWinX() { return winX; };

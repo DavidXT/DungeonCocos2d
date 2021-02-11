@@ -7,7 +7,9 @@ class Enemy
 	int roomPosY;
 
 public:
-	Enemy();
+	Enemy();//Constructor
+
+	//Getter and Setter
 	int GetSprite();
 	void SetSprite(int);
 	int GetPosX();

@@ -5,6 +5,7 @@
 USING_NS_CC;
 using namespace CocosDenshion;
 
+//Constructor of dungeon
 Dungeon::Dungeon(int nbRoom,int X, int Y) {
 	sizeX = X;
 	sizeY = Y;
@@ -19,16 +20,19 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 	int currentX;
 	int currentY;
 	int j = 0;
-	do {
-		currentX = rand() % sizeX;
-		currentY = rand() % sizeY;
+	//Room Generation
+	do { // Do it until it has enought room
+		currentX = rand() % sizeX; //Generate random Number in range of the array
+		currentY = rand() % sizeY; //Generate random Number in range of the array
+
+		//All check for generation of the room
 		if (currentX == 0) {
-			if (currentY == 0) {
+			if (currentY == 0) { 
 				if (AllRoom[currentX + 1][currentY] != nullptr || AllRoom[currentX][currentY + 1] != nullptr) {
 					if (AllRoom[currentX][currentY] == nullptr) {
 						AllRoom[currentX][currentY] = new Room(currentX, currentY);
 						j++;
-						if (j == nbRoom) {
+						if (j == nbRoom) { //Generate an exit
 							winX = currentX;
 							winY = currentY;
 						}
@@ -40,7 +44,7 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 					if (AllRoom[currentX][currentY] == nullptr) {
 						AllRoom[currentX][currentY] = new Room(currentX, currentY);
 						j++;
-						if (j == nbRoom) {
+						if (j == nbRoom) { //Generate an exit
 							winX = currentX;
 							winY = currentY;
 						}
@@ -54,7 +58,7 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 				if (AllRoom[currentX][currentY] == nullptr) {
 					AllRoom[currentX][currentY] = new Room(currentX, currentY);
 					j++;
-					if (j == nbRoom) {
+					if (j == nbRoom) { //Generate an exit
 						winX = currentX;
 						winY = currentY;
 					}
@@ -66,7 +70,7 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 				if (AllRoom[currentX][currentY] == nullptr) {
 					AllRoom[currentX][currentY] = new Room(currentX, currentY);
 					j++;
-					if (j == nbRoom) {
+					if (j == nbRoom) { //Generate an exit
 						winX = currentX;
 						winY = currentY;
 					}
@@ -76,6 +80,7 @@ Dungeon::Dungeon(int nbRoom,int X, int Y) {
 	} while (j <= nbRoom);
 }
 
+//Getter of a room[x][y]
 Room* Dungeon::getRoom(int x, int y) {
 	return AllRoom[x][y];
 }

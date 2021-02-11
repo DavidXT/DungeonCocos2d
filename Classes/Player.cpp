@@ -5,14 +5,18 @@
 
 USING_NS_CC;
 using namespace CocosDenshion;
+
+//Constructor
 Player::Player(int coordX, int coordY) {
 	X = coordX;
 	Y = coordY;
 	gold = 0;
 }
 void Player::AddGold(int x) {
-	gold += x;
+	gold += x; //AddGold to player
 }
+
+//Movement function
 void Player::moveDown() {
 	Y--;
 }
@@ -26,6 +30,8 @@ void Player::moveLeft()
 void Player::moveRight() {
 	X++;
 }
+
+//Getter 
 int Player::getPosX() {
 	return X;
 }

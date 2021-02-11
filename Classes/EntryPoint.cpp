@@ -87,7 +87,9 @@ void EntryPoint::ClearPlayerAnim()
 	}
 }
 
-
+/// <summary>
+/// Delete all sprite if they exist
+/// </summary>
 void EntryPoint::ClearRoom()
 {
 	ClearPlayer();
@@ -114,7 +116,9 @@ void EntryPoint::ClearRoom()
 }
 
 
-
+/// <summary>
+/// Check each condition for the generation of the room
+/// </summary>
 void EntryPoint::EnterRoom()
 {
 	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());

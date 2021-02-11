@@ -5,12 +5,14 @@ class Player
 	int Y;
 	int gold ;
 public:
-	Player(int, int);
+	Player(int, int); //Constructor
 	void AddGold(int);
+	//Function of movement
 	void moveDown();
 	void moveUp();
 	void moveLeft();
 	void moveRight();
+	//Getter
 	int getPosX();
 	int getPosY();
 	int getGold();

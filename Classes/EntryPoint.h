@@ -20,8 +20,11 @@ protected:
 	void ClearPlayerAnim();
 	void EnterRoom();
 
+	//Function spawning enemy and treasure chest
 	void _AddTreasure();
 	void _SpawnEnemy();
+
+	//Function Door
 	void _AddDoorLeft();
 	void _AddDoorRight();
 	void _AddDoorUp();
