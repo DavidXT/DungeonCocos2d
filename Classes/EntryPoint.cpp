@@ -227,21 +227,25 @@ void EntryPoint::MovePlayer(Vec3 pos)
 void EntryPoint::_SpawnEnemy()
 {
 	Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
-	Enemy* E = actualRoom->getEnemy1();
-	tempName = enemiesSprites[E->GetSprite()];
-	_enemy = Sprite::create(tempName);
-	_enemy->setPosition(E->GetPosX(),E->GetPosY());
-	_enemy->setScale(1.5, 1.5);
-	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
-	_parent->addChild(_enemy);
+	if (actualRoom->getHaveE1()) {
+		Enemy* E = actualRoom->getEnemy1();
+		tempName = enemiesSprites[E->GetSprite()];
+		_enemy = Sprite::create(tempName);
+		_enemy->setPosition(E->GetPosX(), E->GetPosY());
+		_enemy->setScale(1.5, 1.5);
+		//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
+		_parent->addChild(_enemy);
+	}
 
-	Enemy* E2 = actualRoom->getEnemy2();
-	tempName = enemiesSprites[E2->GetSprite()];
-	_enemy2 = Sprite::create(tempName);
-	_enemy2->setPosition(E2->GetPosX(), E2->GetPosY());
-	_enemy2->setScale(1.5, 1.5);
-	//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
-	_parent->addChild(_enemy2);
+	if (actualRoom->getHaveE2()) {
+		Enemy* E2 = actualRoom->getEnemy2();
+		tempName = enemiesSprites[E2->GetSprite()];
+		_enemy2 = Sprite::create(tempName);
+		_enemy2->setPosition(E2->GetPosX(), E2->GetPosY());
+		_enemy2->setScale(1.5, 1.5);
+		//_treasure->setScale((rand() % 30) / 10.0f + 2.0f);
+		_parent->addChild(_enemy2);
+	}
 }
 
 void EntryPoint::_AddDoorLeft() {
@@ -469,6 +473,7 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 		}
 
 		if (_enemy) {
+			Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 			// convert coordinates to the treasure coordinations
 			auto node_p = _enemy->convertToNodeSpace(position);
 			// get the size of the treasure
@@ -477,10 +482,14 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
+				actualRoom->killE1();
+				_enemy->removeFromParent();
+				_enemy = nullptr;
 			}
 		}
 
 		if (_enemy2) {
+			Room* actualRoom = dungeon->getRoom(player->getPosX(), player->getPosY());
 			// convert coordinates to the treasure coordinations
 			auto node_p = _enemy2->convertToNodeSpace(position);
 			// get the size of the treasure
@@ -489,6 +498,9 @@ void EntryPoint::Touch(cocos2d::Vec2 position, bool down)
 			if (node_p.x >= 0 && node_p.y >= 0 && node_p.x < cs.width && node_p.y < cs.height)
 			{
 				SimpleAudioEngine::getInstance()->playEffect("treasure.wav");
+				actualRoom->killE2();
+				_enemy2->removeFromParent();
+				_enemy2 = nullptr;
 			}
 		}
 		if (_exit) {

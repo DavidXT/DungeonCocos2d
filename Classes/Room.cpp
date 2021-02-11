@@ -24,3 +24,12 @@ void Room::TakeChest()
 {
 	haveChest = false;
 }
+
+void Room::killE1()
+{
+	haveE1 = false;
+}
+void Room::killE2()
+{
+	haveE2 = false;
+}
